@@ -1,0 +1,18 @@
+version: '3'
+services:
+  rs-hello-world:
+    hostname: rs-hello-world
+    image: rs-hello-world:0.0.1
+    container_name: rs-hello-world
+    privileged: true
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "58447:8080"
+    networks:
+      - main
+
+networks:
+  main:
+    external: true
