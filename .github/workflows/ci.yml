@@ -30,9 +30,9 @@ jobs:
         env:
           NAMESPACE: a2cd
           IMAGE_NAME: rs-hello-world
-          IMAGE_TAG: prd
+          IMAGE_TAG: $(date "+%Y%m%d")
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: $NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+          tags: $NAMESPACE/$IMAGE_NAME:latest,$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
