@@ -8,8 +8,6 @@ services:
     restart: always
     environment:
       - TZ=Asia/Shanghai
-    ports:
-      - "58447:8080"
     networks:
       - main
 
