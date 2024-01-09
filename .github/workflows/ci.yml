@@ -35,11 +35,9 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY_DOMAIN }}/$NAMESPACE/$IMAGE_NAME
       - name: Build and push Docker image
-        env:
-          IMAGE_TAG: PRD
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: $IMAGE_TAG
+          tags: PRD
           labels: ${{ steps.meta.outputs.labels }}
