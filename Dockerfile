@@ -1,4 +1,4 @@
-FROM rs-deps:1.74.0-alpine AS builder
+FROM rust:1.74.0-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN cargo build --release
