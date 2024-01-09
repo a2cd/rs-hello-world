@@ -22,12 +22,17 @@ jobs:
           cargo test --verbose
       - name: Build and push image
         env:
+          NAMESPACE: a2cd
+          IMAGE_NAME: rs-hello-world
           IMAGE_TAG: 20240109
+          RD: ${{ secrets.REGISTRY_DOMAIN }}
+          RU: ${{ secrets.REGISTRY_USERNAME }}
+          RP: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ secrets.REGISTRY_DOMAIN }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+          echo $RP | docker login $RD -u $RU --password-stdin
           echo "当前路径:"
           pwd
           echo "文件:"
           ls -l
-          docker build -t ${{ secrets.REGISTRY_DOMAIN }}/a2cd/rs-hello-world:$IMAGE_TAG .
-          docker push ${{ secrets.REGISTRY_DOMAIN }}/a2cd/rs-hello-world:$IMAGE_TAG
+          docker build -t $RD/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG .
+          docker push $RD/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
