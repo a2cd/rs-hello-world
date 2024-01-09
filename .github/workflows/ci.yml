@@ -27,12 +27,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Build and push Docker image
-        env:
-          NAMESPACE: a2cd
-          IMAGE_NAME: rs-hello-world
-          IMAGE_TAG: $(date "+%Y%m%d")
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: $NAMESPACE/$IMAGE_NAME:latest,$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+          tags: a2cd/rs-hello-world:latest
