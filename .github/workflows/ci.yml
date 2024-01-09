@@ -20,7 +20,7 @@ jobs:
       - name: Run tests
         run: |
           cargo test --verbose
-      - name: Log in to the Container registry
+      - name: Docker login
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.REGISTRY_DOMAIN }}
@@ -30,14 +30,15 @@ jobs:
         env:
           NAMESPACE: a2cd
           IMAGE_NAME: rs-hello-world
+          IMAGE_TAG: prd
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.REGISTRY_DOMAIN }}/$NAMESPACE/$IMAGE_NAME
+          images: ${{ secrets.REGISTRY_DOMAIN }}/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: prd # 必须小写, 获取meta生成的tag → ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
