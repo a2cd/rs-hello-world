@@ -32,6 +32,6 @@ jobs:
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
           echo $REGISTRY_DOMAIN
-          docker login $REGISTRY_DOMAIN -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
+          echo REGISTRY_PASSWORD | docker login $REGISTRY_DOMAIN -u $REGISTRY_USERNAME --password-stdin
           docker build -t $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG .
           docker push $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG
