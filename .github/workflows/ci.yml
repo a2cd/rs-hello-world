@@ -23,14 +23,11 @@ jobs:
       - name: Build and push image
         env:
           IMAGE_TAG: 20240109
-          REGISTRY_DOMAIN: ${{ secrets.REGISTRY_DOMAIN }}
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
-          echo $REGISTRY_PASSWORD | docker login $REGISTRY_DOMAIN -u $REGISTRY_USERNAME --password-stdin
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ secrets.REGISTRY_DOMAIN }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
           echo "当前路径:"
           pwd
           echo "文件:"
           ls -l
-          docker build -t $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG .
-          docker push $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG
+          docker build -t ${{ secrets.REGISTRY_DOMAIN }}/a2cd/rs-hello-world:$IMAGE_TAG .
+          docker push ${{ secrets.REGISTRY_DOMAIN }}/a2cd/rs-hello-world:$IMAGE_TAG
