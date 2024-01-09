@@ -37,12 +37,14 @@ jobs:
           REGISTRY: ${{ secrets.REGISTRY_DOMAIN }}
           NAMESPACE: a2cd
           IMAGE_NAME: rs-hello-world
-          IMAGE_TAG: $(date "+%Y%m%d")
+          IMAGE_TAG: 20240110
+          IMAGE_TAG1: $(date "+%Y%m%d")
         run: |
           echo "当前路径:"
           pwd
           echo "文件:"
           ls -l
+          echo $IMAGE_TAG1
           docker build -t $REGISTRY/$NAMESPACE/$IMAGE_NAME:latest .
           docker tag $REGISTRY/$NAMESPACE/$IMAGE_NAME:latest $REGISTRY/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
           docker push $REGISTRY/$NAMESPACE/$IMAGE_NAME:latest
