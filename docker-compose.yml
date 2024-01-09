@@ -2,7 +2,7 @@ version: '3'
 services:
   rs-hello-world:
     hostname: rs-hello-world
-    image: rs-hello-world:0.0.1
+    image: ccr.ccs.tencentyun.com/a2cd/rs-hello-world:PRD
     container_name: rs-hello-world
     privileged: true
     restart: always

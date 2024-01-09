@@ -13,26 +13,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3 # pull代码
+      - uses: actions/checkout@v4 # pull代码
       - name: Build src
         run:  |
           cargo build --release --verbose
       - name: Run tests
         run: |
           cargo test --verbose
-      - name: Build and push image
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_DOMAIN }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
         env:
           NAMESPACE: a2cd
           IMAGE_NAME: rs-hello-world
-          IMAGE_TAG: 20240109
-          RD: ${{ secrets.REGISTRY_DOMAIN }}
-          RU: ${{ secrets.REGISTRY_USERNAME }}
-          RP: ${{ secrets.REGISTRY_PASSWORD }}
-        run: |
-          echo $RP | docker login $RD -u $RU --password-stdin
-          echo "当前路径:"
-          pwd
-          echo "文件:"
-          ls -l
-          docker build -t $RD/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG .
-          docker push $RD/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.REGISTRY_DOMAIN }}/$NAMESPACE/$IMAGE_NAME
+      - name: Build and push Docker image
+        env:
+          IMAGE_TAG: PRD
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: $IMAGE_TAG
