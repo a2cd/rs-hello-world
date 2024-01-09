@@ -13,18 +13,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Build
-        run: cargo build --verbose
+      - uses: actions/checkout@v3 # pull代码
+      - name: Build src
+        run:  |
+          echo '当前路径:'
+          pwd
+          cargo build --verbose
       - name: Run tests
-        run: cargo test --verbose
-      - name: Build and Push Docker Image
+        run: |
+          echo '当前路径:'
+          pwd
+          cargo test --verbose
+      - name: Build and push image
         env:
           IMAGE_TAG: 20240109
           REGISTRY_DOMAIN: ${{ secrets.REGISTRY_DOMAIN }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
         run: |
+          echo $REGISTRY_DOMAIN
           docker login $REGISTRY_DOMAIN -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
           docker build -t $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG .
           docker push $REGISTRY_DOMAIN/a2cd/rs-hello-world:$IMAGE_TAG
