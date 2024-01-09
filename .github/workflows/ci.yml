@@ -42,3 +42,4 @@ jobs:
           context: .
           push: true
           tags: $IMAGE_TAG
+          labels: ${{ steps.meta.outputs.labels }}
