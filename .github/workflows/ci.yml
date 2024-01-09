@@ -26,19 +26,13 @@ jobs:
           registry: ${{ secrets.REGISTRY_DOMAIN }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Build and push Docker image
         env:
           NAMESPACE: a2cd
           IMAGE_NAME: rs-hello-world
           IMAGE_TAG: prd
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.REGISTRY_DOMAIN }}/$NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
-      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: prd # 必须小写, 获取meta生成的tag → ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: $NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
