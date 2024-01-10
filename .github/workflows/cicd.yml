@@ -45,7 +45,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
-          cat >>~/.ssh/config <<END
+          cat > ~/.ssh/config <<END
           Host staging
             HostName $SSH_HOST
             User $SSH_USER
@@ -53,4 +53,4 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Update container
-        run: ssh staging 'cd /usr/local/repo/rs-hello-world/ && sudo docker-compose pull && sudo docker-compose -f docker-compose.yml up -d'
+        run: ssh staging 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose -f docker-compose.yml up -d'
