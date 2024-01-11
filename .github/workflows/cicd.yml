@@ -42,10 +42,8 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh/
-          echo "SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key
-          chmod 600 ~/.ssh/a2cd.key
-          cat > ~/.ssh/config <<END
+          mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key
+          cat >> ~/.ssh/config <<END
           Host a2cd
             HostName $SSH_HOST
             User $SSH_USER
@@ -53,4 +51,4 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Deploy
-        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose -f docker-compose.yml up -d'
+        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose up -d'
