@@ -14,8 +14,22 @@ jobs:
     runs-on: ubuntu-20.04 # 勿使用ubuntu-latest, 打包后找不到lib依赖
     steps:
       - uses: actions/checkout@v4 # pull代码
+      - name: Cache
+        # 缓存大小10GB, 7天不用清空
+        uses: actions/cache@v3
+        with:
+          # 缓存或还原的路径
+          path: |
+            ./target
+            ~/.cargo
+          # 唯一key
+          key: prd-${{ runner.os }}-${{ hashFiles('rust-toolchain.toml') }}-${{ hashFiles('Cargo.lock') }}
+          # key没有命中则按照前缀顺序依次来还原缓存
+          restore-keys: |
+            prd-${{ runner.os }}-${{ hashFiles('rust-toolchain.toml') }}-
+            prd-${{ runner.os }}-
       - name: Build src
-        run:  |
+        run: |
           cargo build --release --verbose
       - name: Run tests
         run: |
@@ -40,7 +54,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          KEY_FILE: a2cd.key
+          KEY_FILE: a2cd.key # 不能用~/.ssh/a2cd.key作为value
         run: |
           mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > ~/.ssh/$KEY_FILE && chmod 600 ~/.ssh/$KEY_FILE
           cat >> ~/.ssh/config <<END
