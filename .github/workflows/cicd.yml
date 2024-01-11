@@ -43,14 +43,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh/
-          echo "SSH_PRIVATE_KEY" > ~/.ssh/staging.key
-          chmod 600 ~/.ssh/staging.key
+          echo "SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key
+          chmod 600 ~/.ssh/a2cd.key
           cat > ~/.ssh/config <<END
-          Host staging
+          Host a2cd
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/staging.key
+            IdentityFile ~/.ssh/a2cd.key
             StrictHostKeyChecking no
           END
-      - name: Update container
-        run: ssh staging 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose -f docker-compose.yml up -d'
+      - name: Deploy
+        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose -f docker-compose.yml up -d'
