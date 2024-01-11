@@ -40,13 +40,14 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          KEY_FILE: ~/.ssh/a2cd.key
         run: |
-          mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key && chmod 600 ~/.ssh/staging.key
+          mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > $KEY_FILE && chmod 600 $KEY_FILE
           cat >> ~/.ssh/config <<END
           Host a2cd
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/a2cd.key
+            IdentityFile $KEY_FILE
             StrictHostKeyChecking no
           END
       - name: Deploy
