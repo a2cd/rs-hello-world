@@ -11,8 +11,7 @@ env:
 
 jobs:
   build:
-#    runs-on: ubuntu-latest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-20.04 # 勿使用ubuntu-latest, 打包后找不到lib依赖
     steps:
       - uses: actions/checkout@v4 # pull代码
       - name: Build src
@@ -42,7 +41,7 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key
+          mkdir -p ~/.ssh/ && echo "$SSH_PRIVATE_KEY" > ~/.ssh/a2cd.key && chmod 600 ~/.ssh/staging.key
           cat >> ~/.ssh/config <<END
           Host a2cd
             HostName $SSH_HOST
