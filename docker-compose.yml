@@ -4,7 +4,6 @@ services:
     hostname: rs-hello-world
     image: ccr.ccs.tencentyun.com/a2cd/rs-hello-world:latest
     container_name: rs-hello-world
-    privileged: true
     restart: always
     environment:
       - TZ=Asia/Shanghai
