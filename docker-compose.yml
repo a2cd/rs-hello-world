@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       - TZ=Asia/Shanghai
-      - HELLO=hello
+      - HELLO=1
     networks:
       - main
 
