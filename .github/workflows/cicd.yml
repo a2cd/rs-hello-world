@@ -64,5 +64,14 @@ jobs:
             IdentityFile ~/.ssh/$KEY_FILE
             StrictHostKeyChecking no
           END
+      - name: Run git pull
+        # 从github pull代码，失败重试3次
+        run: |
+          ssh a2cd "cd /usr/local/repo/rs-hello-world/ && \
+                    git pull origin main || \
+                    (echo 'git pull retry: 1/3' && git pull origin main) || \
+                    (echo 'git pull retry: 2/3' && git pull origin main) || \
+                    (echo 'git pull retry: 3/3' && git pull origin main) || \
+                    (echo 'git pull failed' && exit 1)"
       - name: Run deploy
-        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && git pull origin main && docker-compose pull && docker-compose up -d'
+        run: ssh a2cd 'docker-compose pull && docker-compose up -d'
