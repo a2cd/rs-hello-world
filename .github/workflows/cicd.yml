@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-20.04 # 勿使用ubuntu-latest, 打包后找不到lib依赖
     steps:
       - uses: actions/checkout@v4 # pull代码
-      - name: Cache
+      - name: Setup cache
         # 缓存大小10GB, 7天不用清空
         uses: actions/cache@v3
         with:
@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             prd-${{ runner.os }}-${{ hashFiles('rust-toolchain.toml') }}-
             prd-${{ runner.os }}-
-      - name: Build src
+      - name: Run build src
         run: |
           cargo build --release --verbose
       - name: Run tests
@@ -40,7 +40,7 @@ jobs:
           registry: ${{ secrets.REGISTRY_DOMAIN }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - name: Build and push image
+      - name: Run build and push docker image
         env:
           REGISTRY: ${{ secrets.REGISTRY_DOMAIN }}
           NAMESPACE: a2cd
@@ -64,5 +64,5 @@ jobs:
             IdentityFile ~/.ssh/$KEY_FILE
             StrictHostKeyChecking no
           END
-      - name: Deploy
-        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && docker-compose pull && docker-compose up -d'
+      - name: Run deploy
+        run: ssh a2cd 'cd /usr/local/repo/rs-hello-world/ && git pull origin main && docker-compose pull && docker-compose up -d'
